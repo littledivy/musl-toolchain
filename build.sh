@@ -23,6 +23,10 @@ for TARGET in "${TARGETS[@]}"; do
 
     cp config.mak musl-cross-make
 
-    make -C musl-cross-make TARGET="${TARGET}" &> "build-${TARGET}.log"
+    if ! make -C musl-cross-make TARGET="${TARGET}" &> "build-${TARGET}.log"; then
+        echo "Build failed for ${TARGET}. Log output:"
+        cat "build-${TARGET}.log"
+        exit 1
+    fi
     make -C musl-cross-make TARGET="${TARGET}" install OUTPUT="${OUTPUT}"
 done
