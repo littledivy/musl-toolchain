@@ -45,6 +45,12 @@ jobs:
           echo "/opt/homebrew/opt/make/libexec/gnubin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          # Create sha1sum alias for macOS
+          mkdir -p /usr/local/bin
+          echo '#!/bin/bash' > /usr/local/bin/sha1sum
+          echo 'shasum "$@"' >> /usr/local/bin/sha1sum
+          chmod +x /usr/local/bin/sha1sum
+          echo "/usr/local/bin" >> $GITHUB_PATH
 
       - name: Build toolchain for ${{ matrix.target }}
         run: |
