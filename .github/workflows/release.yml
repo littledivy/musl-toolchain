@@ -24,17 +24,7 @@ jobs:
           - arm-linux-musleabihf
           - armeb-linux-musleabi
           - armeb-linux-musleabihf
-          - mips-linux-musl
-          - mipsel-linux-musl
-          - mips64-linux-musl
-          - mips64el-linux-musl
-          - powerpc-linux-musl
-          - powerpc64-linux-musl
-          - powerpc64le-linux-musl
           - riscv64-linux-musl
-          - s390x-linux-musl
-          - microblaze-linux-musl
-          - microblazeel-linux-musl
 
     steps:
       - name: Checkout repository
