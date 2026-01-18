@@ -1,0 +1,68 @@
+name: Build Toolchains
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14  # Apple Silicon runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install gcc@14 make flex bison gawk texinfo wget
+
+      - name: Setup PATH
+        run: |
+          echo "/opt/homebrew/opt/gcc@14/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/make/libexec/gnubin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+
+      - name: Clone musl-cross-make
+        run: |
+          if [ ! -d "musl-cross-make" ]; then
+            git clone https://github.com/richfelker/musl-cross-make.git
+          fi
+
+      - name: Build toolchains
+        run: ./build.sh
+
+      - name: Package toolchains
+        run: |
+          cd toolchain
+          for target in aarch64-linux-musl armv7-linux-musleabihf x86_64-linux-musl; do
+            tar czf "../musl-toolchain-${target}-macos-arm64.tar.gz" .
+            cd ..
+            cd toolchain
+          done
+          cd ..
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: musl-toolchains-macos-arm64
+          path: musl-toolchain-*.tar.gz
+          retention-days: 30
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: musl-toolchain-*.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

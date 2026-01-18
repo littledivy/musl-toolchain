@@ -1,7 +1,7 @@
 GCC_VER = 14.2.0
 BINUTILS_VER = 2.44
 
-GCC_CONFIG += --enable-default-pie
+GCC_CONFIG += --enable-default-pie --enable-build-warnings=,-Wno-format-nonliteral,-Wno-format-security
 
 COMMON_CONFIG += --disable-nls
 GCC_CONFIG += --disable-libquadmath --disable-decimal-float

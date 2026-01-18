@@ -8,6 +8,10 @@ TARGETS+=("x86_64-linux-musl")
 
 NPROC=$(($(getconf _NPROCESSORS_ONLN) - 1))
 
+export CC=gcc
+export CXX=g++
+
+export MAKE="make"
 export MAKEFLAGS="-j ${NPROC}"
 export NINJAFLAGS="-j ${NPROC}"
 
@@ -22,11 +26,6 @@ for TARGET in "${TARGETS[@]}"; do
     echo "building toolchain for ${TARGET}"
 
     cp config.mak musl-cross-make
-
-    if ! make -C musl-cross-make TARGET="${TARGET}" &> "build-${TARGET}.log"; then
-        echo "Build failed for ${TARGET}. Log output:"
-        cat "build-${TARGET}.log"
-        exit 1
-    fi
-    make -C musl-cross-make TARGET="${TARGET}" install OUTPUT="${OUTPUT}"
+    make -C musl-cross-make MAKE=make TARGET="${TARGET}"
+		make -C musl-cross-make MAKE=make TARGET="${TARGET}" install OUTPUT="${OUTPUT}"
 done
