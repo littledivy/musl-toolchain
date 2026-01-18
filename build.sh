@@ -2,9 +2,25 @@
 
 set -eu
 
-TARGETS+=("aarch64-linux-musl")
-TARGETS+=("armv7-linux-musleabihf")
 TARGETS+=("x86_64-linux-musl")
+TARGETS+=("i686-linux-musl")
+TARGETS+=("aarch64-linux-musl")
+TARGETS+=("aarch64_be-linux-musl")
+TARGETS+=("arm-linux-musleabi")
+TARGETS+=("arm-linux-musleabihf")
+TARGETS+=("armeb-linux-musleabi")
+TARGETS+=("armeb-linux-musleabihf")
+TARGETS+=("mips-linux-musl")
+TARGETS+=("mipsel-linux-musl")
+TARGETS+=("mips64-linux-musl")
+TARGETS+=("mips64el-linux-musl")
+TARGETS+=("powerpc-linux-musl")
+TARGETS+=("powerpc64-linux-musl")
+TARGETS+=("powerpc64le-linux-musl")
+TARGETS+=("riscv64-linux-musl")
+TARGETS+=("s390x-linux-musl")
+TARGETS+=("microblaze-linux-musl")
+TARGETS+=("microblazeel-linux-musl")
 
 NPROC=$(($(getconf _NPROCESSORS_ONLN) - 1))
 

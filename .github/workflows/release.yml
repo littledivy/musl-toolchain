@@ -16,9 +16,25 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macos-14]
         target:
-          - aarch64-linux-musl
-          - armv7-linux-musleabihf
           - x86_64-linux-musl
+          - i686-linux-musl
+          - aarch64-linux-musl
+          - aarch64_be-linux-musl
+          - arm-linux-musleabi
+          - arm-linux-musleabihf
+          - armeb-linux-musleabi
+          - armeb-linux-musleabihf
+          - mips-linux-musl
+          - mipsel-linux-musl
+          - mips64-linux-musl
+          - mips64el-linux-musl
+          - powerpc-linux-musl
+          - powerpc64-linux-musl
+          - powerpc64le-linux-musl
+          - riscv64-linux-musl
+          - s390x-linux-musl
+          - microblaze-linux-musl
+          - microblazeel-linux-musl
 
     steps:
       - name: Checkout repository
