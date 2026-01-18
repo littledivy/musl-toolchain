@@ -11,9 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-22.04, macos-14]
         target:
           - aarch64-linux-musl
           - armv7-linux-musleabihf
@@ -25,10 +26,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies
+      - name: Install dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential wget
+
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos-14'
+        run: |
+          brew install gcc@14 make flex bison gawk texinfo wget
+
+      - name: Setup environment (macOS)
+        if: matrix.os == 'macos-14'
+        run: |
+          echo "CC=gcc-14" >> $GITHUB_ENV
+          echo "CXX=g++-14" >> $GITHUB_ENV
+          echo "/opt/homebrew/opt/make/libexec/gnubin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
 
       - name: Build toolchain for ${{ matrix.target }}
         run: |
@@ -39,13 +55,18 @@ jobs:
       - name: Create archive
         run: |
           cd toolchain
-          tar -czf "../${{ matrix.target }}-toolchain.tar.gz" .
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            PLATFORM="linux-x64"
+          else
+            PLATFORM="macos-arm64"
+          fi
+          tar -czf "../${{ matrix.target }}-${PLATFORM}.tar.gz" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target }}-toolchain
-          path: ${{ matrix.target }}-toolchain.tar.gz
+          name: ${{ matrix.target }}-${{ matrix.os }}
+          path: ${{ matrix.target }}-*.tar.gz
 
   release:
     needs: build
