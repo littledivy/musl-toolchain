@@ -2,3 +2,10 @@ Prebuilt distribution of Rich Felker's [musl-cross-make](https://github.com/rich
 - `armv7-linux-musleabihf`
 - `aarch64-linux-musl`
 - `x86_64-linux-musl`
+- `i686-linux-musl`
+- `aarch64_be-linux-musl`
+- `arm-linux-musleabi`
+- `arm-linux-musleabihf`
+- `armeb-linux-musleabi`
+- `armeb-linux-musleabihf`
+- `riscv64-linux-musl`
